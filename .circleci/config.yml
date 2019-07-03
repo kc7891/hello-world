@@ -26,9 +26,4 @@ jobs:
 workflows:
     "Hello Workflow":
         jobs:
-          - build
-          - build2
-          - build3:
-            requires:
-              - build
-      
+          - hello/hello-build
