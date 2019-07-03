@@ -1,47 +1,34 @@
-version: 2
+version: 2.1
+
+orbs:
+    hello: circleci/hello-build@0.0.7 # uses the circleci/buildpack-deps Docker image
+
 jobs:
-  build1:
-    docker:
-      - image: circleci/ruby:2.4-node
-      - image: circleci/postgres:9.4.12-alpine
+  build:
+    docker: # use the docker executor type; machine and macos executors are also supported
+      - image: circleci/node:4.8.2 # the primary container, where your job's commands are run
     steps:
-      - checkout
-      - save_cache: # Caches dependencies with a cache key
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-          paths:
-            - ~/circleci-demo-workflows
-      
+      - checkout # check out the code in the project directory
+      - run: echo "hello world" # run the `echo` command
   build2:
-    docker:
-      - image: circleci/ruby:2.4-node
-      - image: circleci/postgres:9.4.12-alpine
+    docker: # use the docker executor type; machine and macos executors are also supported
+      - image: circleci/node:4.8.2 # the primary container, where your job's commands are run
     steps:
-      - restore_cache: # Restores the cached dependency.
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run:
-          name: Running tests
-          command: make test
+      - checkout # check out the code in the project directory
+      - run: echo "hello world2" # run the `echo` command
   build3:
-    docker:
-      - image: circleci/ruby:2.4-node
-      - image: circleci/postgres:9.4.12-alpine
+    docker: # use the docker executor type; machine and macos executors are also supported
+      - image: circleci/node:4.8.2 # the primary container, where your job's commands are run
     steps:
-      - restore_cache: # Restores the cached dependency.
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - run:
-          name: Precompile assets
-          command: bundle exec rake assets:precompile
-...                          
+      - checkout # check out the code in the project directory
+      - run: echo "hello world3" # run the `echo` command
+
 workflows:
-  version: 2
-  build_and_test: # name of your workflow
-    jobs:
-      - build1
-      - build2:
-        requires:
-          - build1 # wait for build1 job to complete successfully before starting
-            # see circleci.com/docs/2.0/workflows/ for more examples.
-      - build3:
-        requires:
-          - build1 # wait for build1 job to complete successfully before starting
-            # run build2 and build3 in parallel to save time.
+    "Hello Workflow":
+        jobs:
+          - build
+          - build2
+          - build3:
+            requires:
+              - build
+      
