@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build_and_test:
+  build:
     working_directory: ~/circleCI-playground # You can set your project directory on your circleCI directory
     docker:
       - image: node:8.9.4
